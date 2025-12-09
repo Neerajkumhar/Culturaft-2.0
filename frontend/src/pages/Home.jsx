@@ -39,7 +39,7 @@ export default function Home() {
       {/* Hero Section: Immersive & Narrative */}
       <section className="relative h-[85vh] w-full overflow-hidden">
         <img 
-          src="/public/img/hero.png" 
+          src="/img/hero.png" 
           alt="Artisan working" 
           className="absolute inset-0 w-full h-full object-cover brightness-[0.65]"
         />
