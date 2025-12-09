@@ -8,7 +8,14 @@ const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+	origin: [
+		"https://culturaft-2-0.vercel.app",
+		"http://localhost:5173",
+		"http://localhost:3000"
+	],
+	credentials: true
+}));
 app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
