@@ -6,7 +6,7 @@ const { getNotifications, getOrders, uploadImages, pingUpload } = require('../co
 // Image upload for admin (Cloudinary)
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
-const { uploadImages } = require('../controllers/adminController');
+
 
 router.post('/upload', authMiddleware, adminOnly, upload.array('images', 4), uploadImages);
 // lightweight ping for checking cloudinary availability
