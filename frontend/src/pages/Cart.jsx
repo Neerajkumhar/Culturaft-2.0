@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { ensureHttps, PLACEHOLDER_IMAGE } from '../lib/url'
 import { Link, useNavigate } from 'react-router-dom'
 import { Trash2, Minus, Plus, ArrowRight, Lock, ShoppingBag, ArrowLeft } from 'lucide-react'
 
@@ -85,8 +86,9 @@ export default function Cart() {
                 {/* Image */}
                 <div className="w-24 h-32 sm:w-32 sm:h-40 bg-stone-200 flex-shrink-0 rounded overflow-hidden">
                   <img 
-                    src={item.images?.[0] || `https://picsum.photos/seed/${idx}/200/300`} 
+                    src={ensureHttps(item.images?.[0]) || `https://picsum.photos/seed/${idx}/200/300`} 
                     alt={item.title} 
+                    onError={(e) => { e.currentTarget.src = PLACEHOLDER_IMAGE }}
                     className="w-full h-full object-cover mix-blend-multiply"
                   />
                 </div>

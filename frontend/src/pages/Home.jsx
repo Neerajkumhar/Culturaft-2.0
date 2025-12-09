@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { ArrowRight, Star, Heart, ShoppingBag, Mail, ArrowDown, MoveRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import API from '../lib/api'
+import { ensureHttps, PLACEHOLDER_IMAGE } from '../lib/url'
 
 export default function Home() {
   const [products, setProducts] = useState([])
@@ -269,7 +270,7 @@ export default function Home() {
 // Sub-Component: Minimal Product Card
 // ------------------------------------------------------------------
 function MinimalProductCard({ product }) {
-  const img = product.images?.[0] || `https://picsum.photos/seed/${product._id}/400/500`
+  const img = ensureHttps(product.images?.[0]) || `https://picsum.photos/seed/${product._id}/400/500`
 
   return (
     <Link to={`/products/${product._id}`} className="group block">

@@ -13,6 +13,7 @@ import {
   ArrowLeft
 } from 'lucide-react'
 import API from '../lib/api'
+import { ensureHttps, PLACEHOLDER_IMAGE } from '../lib/url'
 
 export default function ProductDetail() {
   const { id } = useParams()
@@ -101,7 +102,7 @@ export default function ProductDetail() {
 
   // Image fallback logic
   const images = product.images && product.images.length > 0 
-    ? product.images 
+    ? product.images.map(ensureHttps)
     : [`https://picsum.photos/seed/${product._id}/800/800`, `https://picsum.photos/seed/${product._id}extra/800/800`]
 
   return (
@@ -125,8 +126,9 @@ export default function ProductDetail() {
             {/* Main Image */}
             <div className="aspect-[4/5] bg-stone-200 w-full relative overflow-hidden group rounded-sm shadow-sm">
               <img 
-                src={images[activeImg]} 
+                src={images[activeImg] || PLACEHOLDER_IMAGE} 
                 alt={product.title} 
+                onError={(e) => { e.currentTarget.src = PLACEHOLDER_IMAGE }}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 cursor-zoom-in"
               />
               <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1 text-xs font-bold uppercase tracking-widest text-stone-900">
@@ -142,7 +144,7 @@ export default function ProductDetail() {
                   onClick={() => setActiveImg(idx)}
                   className={`w-20 h-24 flex-shrink-0 border transition-all ${activeImg === idx ? 'border-stone-900 opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img || PLACEHOLDER_IMAGE} alt="" onError={(e) => { e.currentTarget.src = PLACEHOLDER_IMAGE }} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>

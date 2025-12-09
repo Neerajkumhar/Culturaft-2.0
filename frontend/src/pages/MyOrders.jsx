@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Package, Truck, CheckCircle, Clock, ChevronRight, ShoppingBag } from 'lucide-react'
 import API, { setToken } from '../lib/api'
+import { ensureHttps, PLACEHOLDER_IMAGE } from '../lib/url'
 import InvoiceModal from '../components/InvoiceModal'
 
 export default function MyOrders() {
@@ -118,8 +119,9 @@ export default function MyOrders() {
                           <div className="h-16 w-16 bg-stone-200 rounded overflow-hidden flex-shrink-0 border border-stone-100">
                             {/* Assuming item.product might be populated with images, or we use a placeholder */}
                             <img 
-                              src={item.product?.images?.[0] || "https://picsum.photos/100"} 
+                              src={ensureHttps(item.product?.images?.[0]) || "https://picsum.photos/100"} 
                               alt="product thumbnail" 
+                              onError={(e) => { e.currentTarget.src = PLACEHOLDER_IMAGE }}
                               className="h-full w-full object-cover"
                             />
                           </div>

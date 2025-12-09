@@ -10,6 +10,7 @@ import {
   CheckCircle 
 } from 'lucide-react'
 import API, { setToken } from '../lib/api'
+import { ensureHttps, PLACEHOLDER_IMAGE } from '../lib/url'
 
 export default function Checkout() {
   const nav = useNavigate()
@@ -220,7 +221,7 @@ export default function Checkout() {
                   <div key={idx} className="flex gap-4">
                     <div className="w-16 h-16 bg-stone-200 rounded-sm overflow-hidden flex-shrink-0">
                       {item.images?.[0] ? (
-                        <img src={item.images[0]} className="w-full h-full object-cover" alt="" />
+                        <img src={ensureHttps(item.images[0]) || PLACEHOLDER_IMAGE} onError={(e) => { e.currentTarget.src = PLACEHOLDER_IMAGE }} className="w-full h-full object-cover" alt="" />
                       ) : (
                          <div className="w-full h-full bg-stone-300" />
                       )}

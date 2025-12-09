@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { Search, SlidersHorizontal, ChevronDown, X, Heart, ShoppingBag } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import API from '../lib/api'
+import { ensureHttps, PLACEHOLDER_IMAGE } from '../lib/url'
 
 export default function Shop() {
   const [products, setProducts] = useState([])
@@ -208,7 +209,7 @@ export default function Shop() {
 // Sub-Component: Product Card for Shop Grid
 // ------------------------------------------
 function ShopProductCard({ product }) {
-  const img = product.images?.[0] || `https://picsum.photos/seed/${product._id}/400/500`
+  const img = ensureHttps(product.images?.[0]) || `https://picsum.photos/seed/${product._id}/400/500`
   const price = (typeof product.price === 'number') ? product.price : Number(product.price) || 0
   
   return (
@@ -216,8 +217,9 @@ function ShopProductCard({ product }) {
       <div className="relative overflow-hidden mb-4 aspect-[3/4] bg-stone-200">
         <Link to={`/products/${product._id}`}>
           <img 
-            src={img} 
-            alt={product.title} 
+            src={img}
+            alt={product.title}
+            onError={(e) => { e.currentTarget.src = PLACEHOLDER_IMAGE }}
             className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" 
           />
         </Link>
