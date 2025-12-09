@@ -65,6 +65,4 @@ app.use('/api/admin', adminRoutes);
 
 app.get('/', (req, res) => res.send({ ok: true, name: 'Culturaft API' }));
 
-app.listen(PORT, () => console.log(`Server is running on port ${PORT}`));
-
 module.exports = app;
