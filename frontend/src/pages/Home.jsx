@@ -67,6 +67,10 @@ export default function Home() {
                  src="/img/hero.png" 
                  alt="Hero" 
                  className="w-full h-full object-cover" 
+                 width={1600}
+                 height={900}
+                 loading="eager"
+                 decoding="async"
                  onError={(e) => e.target.src="https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&q=80&w=2000"}
                />
             </div>
@@ -94,7 +98,7 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
           {/* Large Item */}
           <Link to="/shop?cat=decor" className="relative h-[600px] md:col-span-2 bg-stone-100 group overflow-hidden">
-            <img src={categories[0].img} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+            <img src={categories[0].img} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
             <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-colors" />
             <div className="absolute bottom-8 left-8 bg-white px-6 py-4">
                <h3 className="font-serif text-2xl">{categories[0].title}</h3>
@@ -106,7 +110,7 @@ export default function Home() {
           <div className="flex flex-col gap-1 h-[600px]">
              {categories.slice(1,3).map(cat => (
                <Link to={`/shop?cat=${cat.id}`} key={cat.id} className="relative flex-1 bg-stone-100 group overflow-hidden">
-                 <img src={cat.img} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                 <img src={cat.img} alt="" loading="lazy" decoding="async" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
                  <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-colors" />
                  <div className="absolute bottom-6 left-6 text-white drop-shadow-md">
                     <h3 className="font-serif text-xl">{cat.title}</h3>
@@ -160,6 +164,8 @@ export default function Home() {
                   <img 
                     src={featured.images?.[0] || "https://images.unsplash.com/photo-1590735213920-68192a487c63?auto=format&fit=crop&q=80&w=800"} 
                     alt="Featured" 
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover relative z-10 shadow-2xl" 
                   />
                 </div>
@@ -215,6 +221,8 @@ export default function Home() {
                   <img 
                     src={`https://i.pravatar.cc/400?img=${30+n}`} 
                     alt="Artisan" 
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
@@ -269,6 +277,8 @@ function MinimalProductCard({ product }) {
         <img 
           src={img} 
           alt={product.title} 
+          loading="lazy"
+          decoding="async"
           className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110" 
         />
         {/* Minimal Hover Overlay */}

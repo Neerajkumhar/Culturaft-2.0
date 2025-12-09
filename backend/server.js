@@ -1,6 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
+const path = require('path');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
@@ -8,6 +10,9 @@ const orderRoutes = require('./routes/orders');
 const adminRoutes = require('./routes/admin');
 
 const app = express();
+// Compression: gzip responses to reduce payload size
+app.use(compression());
+
 app.use(cors({
 	origin: [
 		"https://culturaft-2-0.vercel.app",
@@ -22,6 +27,9 @@ const PORT = process.env.PORT || 5000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/culturaft';
 
 connectDB(MONGODB_URI);
+
+// Serve frontend public images with long cache lifetime to improve load performance
+app.use('/img', express.static(path.join(__dirname, '../frontend/public/img'), { maxAge: '30d' }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
