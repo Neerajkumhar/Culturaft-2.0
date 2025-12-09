@@ -65,14 +65,14 @@ export default function Home() {
           <div className="lg:col-span-7 h-[50vh] lg:h-[80vh] relative order-1 lg:order-2">
             <div className="absolute inset-0 bg-stone-200">
                <img 
-                 src="/img/hero.png" 
+                 src="https://drapedinheritage.com/cdn/shop/articles/DALL_E_2025-02-18_15.27.40_-_A_vibrant_scene_depicting_the_traditional_art_of_hand_block_printing_in_Rajasthan._The_image_shows_skilled_artisans_working_with_intricately_carved_wo.webp?v=1739910741&width=1100" 
                  alt="Hero" 
                  className="w-full h-full object-cover" 
                  width={1600}
                  height={900}
                  loading="eager"
                  decoding="async"
-                 onError={(e) => e.target.src="https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&q=80&w=2000"}
+                 onError={(e) => e.currentTarget.src = "https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&q=80&w=2000"}
                />
             </div>
             {/* Floating Badge */}
