@@ -1,18 +1,30 @@
 const Order = require('../models/Order');
 const Notification = require('../models/Notification');
-const cloudinary = require('cloudinary').v2;
 const streamifier = require('streamifier');
 
-// Configure cloudinary from CLOUDINARY_URL env or explicit vars
-if (process.env.CLOUDINARY_URL) {
-  cloudinary.config({ secure: true });
-} else if (process.env.CLOUDINARY_CLOUD_NAME) {
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-    secure: true
-  });
+// Note: require('cloudinary') can throw at module-load time if the package
+// isn't installed in the deployment environment. To avoid crashing the
+// entire serverless function on import errors, we require and configure
+// Cloudinary lazily inside handlers and surface a helpful error message.
+
+function configureCloudinary() {
+  try {
+    const cloudinary = require('cloudinary').v2;
+    if (process.env.CLOUDINARY_URL) {
+      cloudinary.config({ secure: true });
+    } else if (process.env.CLOUDINARY_CLOUD_NAME) {
+      cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET,
+        secure: true
+      });
+    }
+    return cloudinary;
+  } catch (err) {
+    // Return null so callers can handle missing dependency gracefully
+    return null;
+  }
 }
 
 exports.getNotifications = async (req, res) => {
@@ -27,6 +39,13 @@ exports.getOrders = async (req, res) => {
 
 // Admin image upload handler — uploads files in req.files to Cloudinary and returns secure URLs
 exports.uploadImages = async (req, res) => {
+  // Lazily configure cloudinary; if it's not available, return a clear error
+  const cloudinary = configureCloudinary();
+  if (!cloudinary) {
+    console.error('Cloudinary module not available in runtime');
+    return res.status(500).json({ message: 'Cloudinary is not configured on the server. Ensure the cloudinary package is installed and CLOUDINARY_URL is set.' });
+  }
+
   try {
     if (!req.files || req.files.length === 0) return res.status(400).json({ message: 'No files uploaded' });
 
@@ -46,4 +65,10 @@ exports.uploadImages = async (req, res) => {
     console.error('Cloudinary upload error:', err);
     res.status(500).json({ message: 'Image upload failed', error: err.message });
   }
+};
+
+// Lightweight ping endpoint to verify Cloudinary env + dependency at runtime
+exports.pingUpload = (req, res) => {
+  const cloudinary = configureCloudinary();
+  res.json({ ok: true, cloudinaryConfigured: !!process.env.CLOUDINARY_URL, cloudinaryAvailable: !!cloudinary });
 };
