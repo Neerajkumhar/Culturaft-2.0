@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { ArrowRight, Star, Heart, ShoppingBag, Mail } from 'lucide-react'
+import { ArrowRight, Star, Heart, ShoppingBag, Mail, ArrowDown, MoveRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import API from '../lib/api'
-// Assuming ProductCard is available, but I will provide a custom styled one below for the "vibe"
 
 export default function Home() {
   const [products, setProducts] = useState([])
@@ -20,276 +19,273 @@ export default function Home() {
       })
   }, [])
 
-  // Mock data for UI demonstration
+  // Mock data 
   const categories = [
-    { id: 'decor', title: 'Home Decor', subtitle: 'Hand-carved aesthetics', img: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&q=80&w=800' },
+    { id: 'decor', title: 'Decor', subtitle: 'Hand-carved aesthetics', img: 'https://images.unsplash.com/photo-1581539250439-c96689b516dd?auto=format&fit=crop&q=80&w=800' },
     { id: 'apparel', title: 'Textiles', subtitle: 'Organic woven fabrics', img: 'https://images.unsplash.com/photo-1520013573739-1b8495bc99dd?auto=format&fit=crop&q=80&w=800' },
     { id: 'pottery', title: 'Ceramics', subtitle: 'Clay & Kiln fired', img: 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?auto=format&fit=crop&q=80&w=800' },
     { id: 'art', title: 'Artifacts', subtitle: 'Cultural heritage', img: 'https://images.unsplash.com/photo-1565193566173-7a0ee3dbe261?auto=format&fit=crop&q=80&w=800' },
   ]
 
   const featured = products?.find(p => p.featured) || products?.[0]
-  const topSelling = products.slice(0, 4) // Show 4 for a balanced grid
+  const topSelling = products.slice(0, 4)
 
   if (loading) return <div className="min-h-screen flex items-center justify-center text-stone-600 font-serif animate-pulse">Curating collections...</div>
 
   return (
-    <div className="bg-stone-50 min-h-screen text-stone-800 font-sans selection:bg-orange-200">
+    <div className="bg-stone-50 min-h-screen text-stone-900 font-sans selection:bg-orange-200">
       
-      {/* Hero Section: Immersive & Narrative */}
-      <section className="relative h-[85vh] w-full overflow-hidden">
-        <img 
-          src="/img/hero.png" 
-          alt="Artisan working" 
-          className="absolute inset-0 w-full h-full object-cover brightness-[0.65]"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-stone-900/60 to-transparent" />
-        <div className="absolute inset-0" style={{ backgroundColor: 'rgba(28, 25, 23, 0.25)' }} />
-        
-        <div className="relative h-full container mx-auto px-6 flex flex-col justify-center items-start">
-          <span className="text-orange-200 tracking-[0.2em] uppercase text-sm mb-4 font-medium">Authentic & Handmade</span>
-          <h2 className="text-5xl md:text-7xl font-serif text-stone-50 font-medium leading-tight mb-6 max-w-2xl">
-            Bring the soul of <br/> <span className="italic text-orange-100">culture</span> into your home.
-          </h2>
-          <p className="text-stone-200 text-lg md:text-xl max-w-lg mb-8 font-light">
-            Discover a curated marketplace of one-of-a-kind pieces directly from master artisans around the globe.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4">
-            <a href="#shop" className="px-8 py-4 bg-orange-800 hover:bg-orange-700 text-white transition-all duration-300 font-medium tracking-wide">
-              Shop Collections
-            </a>
-            <a href="#artisans" className="px-8 py-4 border border-stone-300 text-stone-100 hover:bg-white hover:text-stone-900 transition-all duration-300">
-              Meet the Makers
-            </a>
+      {/* 1. HERO: Editorial Split Layout */}
+      <header className="relative min-h-[90vh] flex flex-col justify-center pt-20 px-6 border-b border-stone-200">
+        <div className="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 h-full items-center">
+          
+          {/* Text Content */}
+          <div className="lg:col-span-5 flex flex-col justify-center order-2 lg:order-1 pb-12 lg:pb-0">
+            <div className="mb-6 flex items-center gap-3">
+              <span className="h-px w-8 bg-orange-800"></span>
+              <span className="text-orange-800 uppercase tracking-widest text-xs font-bold">Est. 2024</span>
+            </div>
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif leading-[0.9] mb-8 text-stone-900">
+              The Soul <br/>
+              <span className="italic text-stone-500">of</span> Culture.
+            </h1>
+            <p className="text-lg text-stone-600 font-light leading-relaxed max-w-md mb-10 border-l border-stone-300 pl-6">
+              A digital gallery of master craftsmanship. We bridge the gap between ancient heritage and your modern living space.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-5">
+              <a href="#shop" className="group flex items-center justify-between px-6 py-4 bg-stone-900 text-stone-50 w-full sm:w-auto hover:bg-orange-900 transition-colors">
+                <span className="uppercase tracking-widest text-sm">Explore Gallery</span>
+                <ArrowRight size={16} className="group-hover:translate-x-2 transition-transform" />
+              </a>
+            </div>
+          </div>
+
+          {/* Image Content */}
+          <div className="lg:col-span-7 h-[50vh] lg:h-[80vh] relative order-1 lg:order-2">
+            <div className="absolute inset-0 bg-stone-200">
+               <img 
+                 src="/img/hero.png" 
+                 alt="Hero" 
+                 className="w-full h-full object-cover" 
+                 onError={(e) => e.target.src="https://images.unsplash.com/photo-1493106641515-6b5631de4bb9?auto=format&fit=crop&q=80&w=2000"}
+               />
+            </div>
+            {/* Floating Badge */}
+            <div className="absolute -bottom-6 -left-6 bg-orange-50 p-6 max-w-xs shadow-xl hidden md:block border border-stone-100">
+              <p className="font-serif text-lg italic text-stone-800">"Preserving history, one artifact at a time."</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-stone-400 animate-bounce">
+          <span className="text-[10px] uppercase tracking-widest">Scroll</span>
+          <ArrowDown size={14} />
+        </div>
+      </header>
+
+      {/* 2. CATEGORIES: Asymmetrical Grid (Bento Box) */}
+      <section className="py-24 px-6 container mx-auto border-b border-stone-200">
+        <div className="flex justify-between items-end mb-12">
+          <h2 className="text-4xl font-serif">Curated Departments</h2>
+          <a href="/shop" className="text-sm uppercase tracking-widest border-b border-stone-900 pb-1 hover:text-orange-800 hover:border-orange-800 transition-colors">View Full Catalog</a>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-1">
+          {/* Large Item */}
+          <Link to="/shop?cat=decor" className="relative h-[600px] md:col-span-2 bg-stone-100 group overflow-hidden">
+            <img src={categories[0].img} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+            <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-colors" />
+            <div className="absolute bottom-8 left-8 bg-white px-6 py-4">
+               <h3 className="font-serif text-2xl">{categories[0].title}</h3>
+               <p className="text-xs uppercase tracking-wider text-stone-500 mt-1">{categories[0].subtitle}</p>
+            </div>
+          </Link>
+
+          {/* Stacked Items */}
+          <div className="flex flex-col gap-1 h-[600px]">
+             {categories.slice(1,3).map(cat => (
+               <Link to={`/shop?cat=${cat.id}`} key={cat.id} className="relative flex-1 bg-stone-100 group overflow-hidden">
+                 <img src={cat.img} alt="" className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" />
+                 <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-transparent transition-colors" />
+                 <div className="absolute bottom-6 left-6 text-white drop-shadow-md">
+                    <h3 className="font-serif text-xl">{cat.title}</h3>
+                 </div>
+               </Link>
+             ))}
           </div>
         </div>
       </section>
 
-      {/* Decorative Divider */}
-      <div className="h-2 bg-gradient-to-r from-orange-800 via-yellow-700 to-orange-800 w-full"></div>
-
-      {/* Categories: Magazine Style */}
-      <section id="categories" className="py-20 px-6 container mx-auto">
-        <div className="text-center mb-16">
-          <h3 className="font-serif text-4xl text-stone-900 mb-3">Curated Categories</h3>
-          <div className="w-24 h-1 bg-orange-800 mx-auto opacity-50"></div>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {categories.map(cat => (
-            <div key={cat.id} className="group relative h-96 overflow-hidden cursor-pointer">
-              <div className="absolute inset-0 bg-stone-900/20 group-hover:bg-stone-900/40 transition-all z-10" />
-              <div className="absolute inset-0" style={{ backgroundColor: 'rgba(28, 25, 23, 0.25)' }} />
-              <img 
-                src={cat.img} 
-                alt={cat.title} 
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" 
-              />
-              <div className="absolute bottom-0 left-0 right-0 p-6 z-20 text-white translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                <h4 className="text-2xl font-serif italic">{cat.title}</h4>
-                <p className="text-stone-200 text-sm opacity-0 group-hover:opacity-100 transition-opacity delay-100 uppercase tracking-widest mt-1">
-                  {cat.subtitle}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Featured Story: Asymmetrical Layout */}
+      {/* 3. FEATURED: Minimalist Exhibit */}
       {featured && (
-        <section className="py-20 bg-stone-100">
+        <section className="py-24 bg-white">
           <div className="container mx-auto px-6">
-            <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
-              <div className="w-full lg:w-1/2 relative">
-                 {/* Decorative background block */}
-                <div className="absolute -top-4 -left-4 w-full h-full border-2 border-orange-800/30 hidden md:block"></div>
-                <div className="relative aspect-[4/5] bg-stone-200 overflow-hidden shadow-xl">
-                  {featured.images?.[0] 
-                    ? <>
-                      <img src={featured.images[0]} alt="" className="w-full h-full object-cover" />
-                      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(28, 25, 23, 0.25)' }} />
-                    </>
-                    : <>
-                      <img src="https://images.unsplash.com/photo-1590735213920-68192a487c63?auto=format&fit=crop&q=80&w=800" alt="" className="w-full h-full object-cover" />
-                      <div className="absolute inset-0" style={{ backgroundColor: 'rgba(28, 25, 23, 0.25)' }} />
-                    </>
-                  }
+            <div className="flex flex-col md:flex-row items-center gap-16">
+              <div className="md:w-1/2 order-2 md:order-1 space-y-8">
+                <div className="flex items-center gap-4 text-orange-800">
+                  <Star size={18} fill="currentColor" />
+                  <span className="text-sm font-bold uppercase tracking-widest">Curator's Choice</span>
                 </div>
-              </div>
-              
-              <div className="w-full lg:w-1/2 space-y-6">
-                <div className="inline-flex items-center gap-2 text-orange-700 font-bold uppercase tracking-widest text-xs">
-                  <Star size={16} fill="currentColor" /> Editor's Pick
-                </div>
-                <h3 className="text-4xl lg:text-5xl font-serif text-stone-900 leading-tight">
-                  {featured.title}
-                </h3>
-                <p className="text-stone-600 text-lg leading-relaxed border-l-4 border-orange-800/20 pl-6 italic">
-                  "{featured.description}"
-                </p>
                 
-                <div className="py-6 flex items-center gap-8">
+                <h2 className="text-5xl lg:text-6xl font-serif leading-tight text-stone-900">
+                  {featured.title}
+                </h2>
+                
+                <div className="h-px w-24 bg-stone-300"></div>
+
+                <p className="text-xl text-stone-600 font-light leading-relaxed">
+                  {featured.description}
+                </p>
+
+                <div className="flex items-center justify-between pt-4 max-w-sm">
                   <div>
-                    <span className="block text-sm text-stone-500 uppercase tracking-wide">Price</span>
-                    <span className="text-3xl font-serif text-stone-900">₹{featured.price?.toFixed(2)}</span>
+                    <span className="block text-xs uppercase tracking-widest text-stone-400 mb-1">Origin</span>
+                    <span className="font-serif text-lg">{featured.origin || 'Kyoto, Japan'}</span>
                   </div>
                   <div>
-                    <span className="block text-sm text-stone-500 uppercase tracking-wide">Origin</span>
-                    <span className="text-xl font-serif text-stone-900">{featured.origin || 'Unknown'}</span>
+                    <span className="block text-xs uppercase tracking-widest text-stone-400 mb-1">Value</span>
+                    <span className="font-serif text-lg">₹{featured.price?.toFixed(2)}</span>
                   </div>
                 </div>
 
-                <a href={`/products/${featured._id}`} className="inline-flex items-center gap-3 px-8 py-3 bg-stone-900 text-white hover:bg-stone-800 transition-colors">
-                  View Masterpiece <ArrowRight size={18} />
+                <a href={`/products/${featured._id}`} className="inline-block mt-4 px-10 py-4 border border-stone-900 text-stone-900 hover:bg-stone-900 hover:text-white transition-all duration-300 uppercase tracking-widest text-xs font-bold">
+                  View Details
                 </a>
+              </div>
+
+              <div className="md:w-1/2 order-1 md:order-2">
+                <div className="relative aspect-[4/5]">
+                  <div className="absolute top-4 -right-4 w-full h-full border border-stone-200 z-0 hidden md:block"></div>
+                  <img 
+                    src={featured.images?.[0] || "https://images.unsplash.com/photo-1590735213920-68192a487c63?auto=format&fit=crop&q=80&w=800"} 
+                    alt="Featured" 
+                    className="w-full h-full object-cover relative z-10 shadow-2xl" 
+                  />
+                </div>
               </div>
             </div>
           </div>
         </section>
       )}
 
-      {/* Top Selling Grid */}
-      <section id="shop" className="py-24 px-6 container mx-auto">
-        <div className="flex justify-between items-end mb-12">
-          <div>
-            <h3 className="font-serif text-3xl md:text-4xl text-stone-900">Weekly Bestsellers</h3>
-            <p className="text-stone-500 mt-2">Pieces loved by collectors worldwide</p>
-          </div>
-          <a href="/shop" className="hidden md:flex items-center gap-2 text-orange-800 font-medium hover:gap-4 transition-all">
-            View All <ArrowRight size={18} />
-          </a>
-        </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
-          {topSelling.map(p => (
-            <CulturalProductCard key={p._id} product={p} />
-          ))}
-        </div>
-      </section>
-
-      {/* Artisans: Circular & Patterned */}
-      <section id="artisans" className="py-20 bg-stone-900 text-stone-100 relative overflow-hidden">
-        {/* Abstract Pattern overlay */}
-        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#d6d3d1 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
-        
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <h3 className="font-serif text-4xl mb-4">Trending Artisans</h3>
-            <p className="text-stone-400 font-light">
-              We empower creators by cutting out the middleman. 80% of your purchase goes directly to the hands that made it.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[1,2,3,4].map((n)=> (
-              <div key={n} className="group text-center">
-                <div className="relative mx-auto w-32 h-32 mb-6">
-                  <div className="absolute inset-0 rounded-full border border-orange-500/30 scale-110 group-hover:scale-125 transition-transform duration-500"></div>
-                  <img 
-                    src={`https://i.pravatar.cc/300?img=${20+n}`} 
-                    alt="artisan" 
-                    className="w-full h-full rounded-full object-cover border-4 border-stone-800" 
-                  />
-                </div>
-                <div className="font-serif text-xl mb-1">Elara Vance</div>
-                <div className="text-xs text-orange-400 uppercase tracking-widest">Ceramist • Peru</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials: Clean Typography */}
-      <section className="py-24 px-6 container mx-auto">
-        <h3 className="font-serif text-3xl text-center mb-16">Voices of the Community</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { name: 'Sofia M.', text: 'The texture of the fabric is unlike anything I have bought in a store. You can feel the history.', loc: 'New York' },
-            { name: 'Liam D.', text: 'Finally, a marketplace that respects the maker. The packaging was beautiful and sustainable.', loc: 'London' },
-            { name: 'Aisha K.', text: 'A truly unique piece that has become the centerpiece of my living room. Fast shipping too.', loc: 'Toronto' }
-          ].map(t => (
-            <div key={t.name} className="bg-white p-8 border border-stone-200 hover:shadow-lg transition-shadow duration-300">
-              <div className="text-orange-800 mb-4">★★★★★</div>
-              <p className="text-stone-600 italic mb-6 leading-relaxed">"{t.text}"</p>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-stone-200 rounded-full flex items-center justify-center font-serif font-bold text-stone-500">
-                  {t.name[0]}
-                </div>
-                <div>
-                  <div className="font-semibold text-stone-900">{t.name}</div>
-                  <div className="text-xs text-stone-400 uppercase">{t.loc}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Newsletter: Earthy & Direct */}
-      <section className="py-20 bg-orange-900 text-white">
-        <div className="container mx-auto px-6 text-center">
-          <Mail className="mx-auto w-10 h-10 mb-4 opacity-80" />
-          <h4 className="text-3xl font-serif mb-4">Join the Culturaft Collective</h4>
-          <p className="text-orange-100 mb-8 max-w-md mx-auto">
-            Receive stories from artisans, early access to new collections, and a 10% welcome code.
+      {/* 4. SHOP: Clean Grid */}
+      <section id="shop" className="py-24 px-6 container mx-auto bg-stone-50 border-t border-stone-200">
+        <div className="text-center max-w-3xl mx-auto mb-20">
+          <h2 className="text-4xl font-serif mb-4">The Collection</h2>
+          <p className="text-stone-500 font-light">
+            Each piece is selected for its integrity, beauty, and the story it carries.
           </p>
-          <form onSubmit={(e)=>{ e.preventDefault(); alert('Subscribed!') }} className="flex flex-col sm:flex-row justify-center max-w-lg mx-auto gap-0">
-            <input 
-              type="email" 
-              required 
-              placeholder="Enter your email address" 
-              className="px-6 py-4 w-full text-stone-900 outline-none bg-orange-50 focus:bg-white transition-colors" 
-            />
-            <button className="px-8 py-4 bg-stone-900 hover:bg-black text-white font-medium tracking-wide transition-colors whitespace-nowrap">
-              Sign Up
-            </button>
-          </form>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-y-16 gap-x-8">
+          {topSelling.map(p => (
+            <MinimalProductCard key={p._id} product={p} />
+          ))}
+        </div>
+        
+        <div className="text-center mt-20">
+          <Link to="/shop" className="inline-flex items-center gap-3 text-stone-500 hover:text-orange-800 transition-colors pb-1 border-b border-transparent hover:border-orange-800">
+            <span className="uppercase tracking-widest text-xs">View Entire Archive</span>
+            <MoveRight size={16} />
+          </Link>
         </div>
       </section>
+
+      {/* 5. ARTISANS: Portraits (Replaced Circles) */}
+      <section id="artisans" className="py-24 bg-white text-stone-900">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+            
+            {/* Title Block */}
+            <div className="lg:pr-12">
+              <h2 className="text-5xl font-serif mb-6 leading-tight">Meet the <br/> <span className="text-orange-800 italic">Hands.</span></h2>
+              <p className="text-stone-600 mb-8 font-light leading-relaxed">
+                We believe the soul of an object comes from the person who made it. Get to know the masters behind the masterpieces.
+              </p>
+              <Link to="/artisans" className="px-8 py-3 bg-stone-100 text-stone-900 hover:bg-stone-200 transition-colors uppercase tracking-widest text-xs font-bold">
+                Read Their Stories
+              </Link>
+            </div>
+
+            {/* Portraits */}
+            <div className="lg:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((n) => (
+                <div key={n} className="group relative aspect-[3/4] overflow-hidden bg-stone-100">
+                  <img 
+                    src={`https://i.pravatar.cc/400?img=${30+n}`} 
+                    alt="Artisan" 
+                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-900/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
+                    <p className="text-stone-100 font-serif text-xl">Elena V.</p>
+                    <p className="text-orange-200 text-xs uppercase tracking-widest">Master Weaver</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* 6. NEWSLETTER: Minimal Line Art */}
+      <section className="py-24 px-6 border-t border-stone-200 bg-stone-50">
+        <div className="container mx-auto max-w-4xl border border-stone-300 p-12 lg:p-20 text-center bg-white relative">
+           {/* Decorative Corners */}
+           <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-orange-800"></div>
+           <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-orange-800"></div>
+           
+           <Mail className="mx-auto w-8 h-8 text-orange-800 mb-6" />
+           <h2 className="text-3xl font-serif text-stone-900 mb-4">Join the Inner Circle</h2>
+           <p className="text-stone-500 mb-8 font-light">Exclusive access to new acquisitions and artisan stories.</p>
+           
+           <form onSubmit={(e)=>{ e.preventDefault(); alert('Subscribed!') }} className="flex flex-col sm:flex-row max-w-md mx-auto border-b border-stone-300">
+             <input 
+               type="email" 
+               placeholder="email@address.com" 
+               className="flex-1 py-3 bg-transparent outline-none text-stone-900 placeholder:text-stone-300"
+             />
+             <button className="py-3 text-stone-900 font-bold uppercase tracking-widest text-xs hover:text-orange-800 transition-colors">
+               Subscribe
+             </button>
+           </form>
+        </div>
+      </section>
+
     </div>
   )
 }
 
 // ------------------------------------------------------------------
-// Sub-Component: A styling wrapper for Product Cards to match the vibe
+// Sub-Component: Minimal Product Card
 // ------------------------------------------------------------------
-function CulturalProductCard({ product }) {
-  // Fallbacks for data
+function MinimalProductCard({ product }) {
   const img = product.images?.[0] || `https://picsum.photos/seed/${product._id}/400/500`
-  const title = product.title || "Handmade Artifact"
-  const price = product.price || 45.00
-  const artisan = product.artisan || "Local Artisan"
 
   return (
-    <Link to={`/products/${product._id}`} className="group flex flex-col">
-      <div className="relative overflow-hidden mb-4 aspect-[3/4] bg-stone-200">
+    <Link to={`/products/${product._id}`} className="group block">
+      <div className="relative aspect-[3/4] overflow-hidden bg-stone-200 mb-6">
         <img 
           src={img} 
-          alt={title} 
-          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" 
+          alt={product.title} 
+          className="w-full h-full object-cover transition-transform duration-1000 ease-out group-hover:scale-110" 
         />
-        {/* Quick Actions Overlay */}
-        <div className="absolute right-4 top-4 flex flex-col gap-2 translate-x-12 group-hover:translate-x-0 transition-transform duration-300">
-          <button className="p-2 bg-white text-stone-900 hover:bg-orange-800 hover:text-white rounded-full shadow-md transition-colors">
-            <Heart size={18} />
-          </button>
-          <button className="p-2 bg-white text-stone-900 hover:bg-orange-800 hover:text-white rounded-full shadow-md transition-colors delay-75">
-            <ShoppingBag size={18} />
-          </button>
-        </div>
-        {/* 'Handmade' tag */}
-        <div className="absolute bottom-4 left-4 bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-widest text-stone-800 backdrop-blur-sm">
-          Handmade
+        {/* Minimal Hover Overlay */}
+        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center backdrop-blur-[2px]">
+           <span className="bg-stone-900 text-white px-6 py-3 text-xs uppercase tracking-widest">View Object</span>
         </div>
       </div>
 
-      <div className="flex flex-col gap-1">
-        <div className="text-xs text-stone-500 uppercase tracking-wide">By {artisan}</div>
-        <h4 className="font-serif text-lg text-stone-900 leading-tight group-hover:text-orange-800 transition-colors">
-          {title}
+      <div className="text-center">
+        <h4 className="font-serif text-xl text-stone-900 mb-1 group-hover:text-orange-800 transition-colors">
+          {product.title}
         </h4>
-        <div className="font-medium text-stone-900 mt-1">₹{price.toFixed(2)}</div>
+        <div className="flex justify-center gap-3 text-sm text-stone-500 font-light">
+          <span>{product.category || 'Artifact'}</span>
+          <span>•</span>
+          <span>₹{product.price?.toFixed(2)}</span>
+        </div>
       </div>
     </Link>
   )
