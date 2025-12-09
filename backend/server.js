@@ -28,8 +28,8 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/cultur
 
 connectDB(MONGODB_URI);
 
-// Serve frontend public images with long cache lifetime to improve load performance
-app.use('/img', express.static(path.join(__dirname, '../frontend/public/img'), { maxAge: '30d' }));
+// Static image serving is handled by the frontend static host (Vercel/CDN).
+// Removing server-side `/img` static middleware to let the CDN serve images directly.
 
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
