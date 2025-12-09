@@ -1,14 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const { authMiddleware, adminOnly } = require('../middleware/auth');
-const { getNotifications, getOrders, uploadImages, pingUpload } = require('../controllers/adminController');
+const adminController = require('../controllers/adminController');
+const { getNotifications, getOrders, pingUpload } = adminController;
 
 // Image upload for admin (Cloudinary)
 const multer = require('multer');
 const upload = multer({ storage: multer.memoryStorage() });
 
 
-router.post('/upload', authMiddleware, adminOnly, upload.array('images', 4), uploadImages);
+router.post('/upload', authMiddleware, adminOnly, upload.array('images', 4), adminController.uploadImages);
 // lightweight ping for checking cloudinary availability
 router.get('/ping-upload', pingUpload);
 
