@@ -27,6 +27,7 @@ export default function ProductManagement() {
     description: '',
     category: '',
     images: [],
+    localFiles: [], // File objects selected in the admin UI
     featured: false,
     origin: '',
     artisanStory: '',
@@ -89,13 +90,39 @@ export default function ProductManagement() {
       const token = localStorage.getItem('token')
       if (token) setToken(token)
 
+      // Validate images count: existing URLs + newly selected files
+      const existingUrls = Array.isArray(formData.images) ? formData.images.filter(Boolean) : []
+      const newFiles = formData.localFiles || []
+      const totalCount = existingUrls.length + newFiles.length
+      if (totalCount < 1) {
+        alert('Please provide at least 1 image for the product')
+        return
+      }
+      if (totalCount > 4) {
+        alert('Please provide at most 4 images')
+        return
+      }
+
+      // If there are new files, upload them to backend Cloudinary endpoint
+      let uploadedUrls = []
+      if (newFiles.length > 0) {
+        const form = new FormData()
+        newFiles.forEach(f => form.append('images', f))
+        const token = localStorage.getItem('token')
+        if (token) setToken(token)
+        const uploadRes = await API.post('/admin/upload', form, { headers: { 'Content-Type': 'multipart/form-data' }})
+        uploadedUrls = uploadRes.data.urls || []
+      }
+
+      const allImageUrls = [...existingUrls, ...uploadedUrls]
+
       const payload = {
         title: formData.title,
         price: parseFloat(formData.price),
         stock: parseInt(formData.stock) || 0,
         category: formData.category,
         description: formData.description,
-        images: formData.images,
+        images: allImageUrls,
         featured: formData.featured,
         origin: formData.origin,
         artisanStory: formData.artisanStory,
@@ -361,23 +388,55 @@ export default function ProductManagement() {
 
               <div>
                 <label className="block text-sm font-medium text-stone-700 mb-1">
-                  Image URLs (comma-separated)
+                  Images (upload or keep existing URLs) — min 1, max 4
                 </label>
-                <textarea
-                  value={formData.images.join(', ')}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      images: e.target.value
-                        .split(',')
-                        .map(url => url.trim())
-                        .filter(Boolean),
-                    })
-                  }
-                  rows="2"
-                  className="w-full px-3 py-2 border border-stone-300 rounded-md focus:ring-1 focus:ring-stone-900 outline-none"
-                  placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files || [])
+                    // limit to 4 files client-side
+                    if ((formData.images?.length || 0) + files.length > 4) {
+                      alert('You can upload up to 4 images total')
+                      return
+                    }
+                    setFormData({ ...formData, localFiles: files })
+                  }}
+                  className="w-full"
                 />
+
+                {/* Previews of selected files */}
+                {formData.localFiles && formData.localFiles.length > 0 && (
+                  <div className="flex gap-2 mt-2 flex-wrap">
+                    {formData.localFiles.map((f, idx) => (
+                      <div key={idx} className="w-20 h-20 bg-stone-100 rounded overflow-hidden relative">
+                        <img src={URL.createObjectURL(f)} alt={f.name} className="w-full h-full object-cover" />
+                        <button type="button" onClick={() => {
+                          const copy = [...formData.localFiles]
+                          copy.splice(idx, 1)
+                          setFormData({ ...formData, localFiles: copy })
+                        }} className="absolute top-0 right-0 bg-white/80 p-1 text-xs">Remove</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Existing URL list (when editing) */}
+                {formData.images && formData.images.length > 0 && (
+                  <div className="mt-2 grid grid-cols-4 gap-2">
+                    {formData.images.map((url, i) => (
+                      <div key={i} className="w-full h-20 overflow-hidden relative">
+                        <img src={url} alt={`img-${i}`} className="w-full h-full object-cover rounded" />
+                        <button type="button" onClick={() => {
+                          const copy = [...formData.images]
+                          copy.splice(i, 1)
+                          setFormData({ ...formData, images: copy })
+                        }} className="absolute top-0 right-0 bg-white/80 p-1 text-xs">Remove</button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
