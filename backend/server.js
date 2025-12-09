@@ -66,3 +66,11 @@ app.use('/api/admin', adminRoutes);
 app.get('/', (req, res) => res.send({ ok: true, name: 'Culturaft API' }));
 
 module.exports = app;
+
+// If this file is run directly (node server.js), start the HTTP server.
+// When imported by serverless runtimes we only export the app object.
+if (require.main === module) {
+	app.listen(PORT, () => {
+		console.log(`Server listening on port ${PORT}`);
+	});
+}
