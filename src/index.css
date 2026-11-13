@@ -1,0 +1,451 @@
+/* ============================================================
+   CULTURAFT Design System — "Modern Architectural Gallery"
+   Tailwind CSS v4 (tokens via @theme, utilities generated from them)
+   ============================================================ */
+
+@import "tailwindcss";
+
+@theme {
+  /* Official CULTURAFT palette */
+  --color-brand-primary: #cb8832;
+  --color-brand-primary-hover: #c27f2d;
+  --color-brand-light: #e5b66f;
+  --color-brand-soft: #f2e3cb;
+  --color-background: #f8f5ee;
+  --color-background-secondary: #f2e3cb;
+  --color-foreground: #252522;
+  --color-foreground-secondary: #554535;
+  --color-surface: #ffffff;
+  --color-border: #e4d8c5;
+  --color-accent: #e5b66f;
+  --color-button-primary: #cb8832;
+  --color-button-secondary: #252522;
+  --color-navigation-active: #c27f2d;
+  --color-focus-ring: #a06419;
+
+  /* Existing utility names remain aliases of the single brand palette. */
+  --color-chalk: var(--color-background);
+  --color-sand: var(--color-brand-soft);
+  --color-sand-deep: var(--color-border);
+  --color-paper: var(--color-surface);
+  --color-ink: var(--color-foreground);
+  --color-ink-hover: var(--color-foreground-secondary);
+  --color-charcoal: var(--color-foreground-secondary);
+  --color-fog: var(--color-foreground-secondary);
+  --color-terracotta: var(--color-brand-primary);
+  --color-terracotta-deep: var(--color-brand-primary-hover);
+  --color-olive: var(--color-accent);
+  --color-line: var(--color-border);
+  --color-line-strong: var(--color-brand-light);
+
+  /* ---- Type --------------------------------------------------
+     Manrope display · DM Sans text · 1.25 major-third scale                */
+  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+
+  --text-2xs: 0.6875rem;   /* 11px  — eyebrows, legal            */
+  --text-2xs--line-height: 1.45;
+  --text-xs: 0.75rem;      /* 12px  — meta, chips                */
+  --text-xs--line-height: 1.5;
+  --text-sm: 0.875rem;     /* 14px  — nav, secondary             */
+  --text-sm--line-height: 1.55;
+  --text-base: 1rem;       /* 16px  — body                       */
+  --text-base--line-height: 1.65;
+  --text-lead: 1.125rem;   /* 18px  — lede paragraphs            */
+  --text-lead--line-height: 1.6;
+  --text-title: 1.375rem;  /* 22px  — card titles, h3            */
+  --text-title--line-height: 1.35;
+  --text-h3: 1.5rem;       /* 24px  — subsections                */
+  --text-h3--line-height: 1.3;
+  --text-h2: 1.875rem;     /* 30px  — section headings           */
+  --text-h2--line-height: 1.25;
+  --text-h2-lg: 2.25rem;   /* 36px  — section headings, desktop  */
+  --text-h2-lg--line-height: 1.2;
+  --text-h1: 2.75rem;      /* 44px  — page titles                */
+  --text-h1--line-height: 1.12;
+  --text-hero: 3.5rem;     /* 56px  — homepage hero              */
+  --text-hero--line-height: 1.06;
+  --text-hero-lg: 4.5rem;  /* 72px  — homepage hero, wide        */
+  --text-hero-lg--line-height: 1.03;
+
+  /* ---- Form -------------------------------------------------- */
+  --radius-none: 0rem;
+  --radius-hair: 0.125rem; /* 2px — the one radius: focus rings, chips */
+
+  /* ---- Motion ------------------------------------------------ */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---- Layout ------------------------------------------------ */
+  --container-page: 88rem; /* 1408px content max-width            */
+  --spacing-gutter: 1.25rem;
+}
+
+@layer base {
+  :root {
+    /* Motion tokens consumed by utilities below */
+    --dur-fast: 140ms;
+    --dur: 240ms;
+    --dur-slow: 420ms;
+  }
+
+  html {
+    box-sizing: border-box;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: inherit;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    background-color: var(--color-sand); /* reserved tone while loading */
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  button {
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Focus — visible everywhere, never suppressed */
+  :focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+    border-radius: var(--radius-hair);
+  }
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  /* In-page anchors */
+  ::selection {
+    background: var(--color-brand-soft);
+    color: var(--color-foreground);
+  }
+}
+
+/* ============================================================
+   Utilities
+   ============================================================ */
+
+@layer utilities {
+  /* Page frame: 1408px max, breathing gutters */
+  .wrap {
+    width: 100%;
+    max-width: calc(var(--container-page) + 2 * 2.5rem);
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .wrap {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Type helpers */
+  .eyebrow {
+    font-family: var(--font-display);
+    font-size: var(--text-2xs);
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+
+  /* Underline-on-hover link with roomy hit area */
+  .link-quiet {
+    color: var(--color-foreground-secondary);
+    transition: color var(--dur-fast) var(--ease-standard);
+  }
+  .link-quiet:hover {
+    color: var(--color-foreground);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-thickness: 1px;
+  }
+
+  /* Nav item underline reveal */
+  .nav-link {
+    position: relative;
+    padding-block: 0.75rem;
+    color: var(--color-foreground-secondary);
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    transition: color var(--dur-fast) var(--ease-standard);
+  }
+  .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 100%;
+    bottom: 0.25rem;
+    height: 2px;
+    background: var(--color-navigation-active);
+    transition: right var(--dur) var(--ease-standard);
+  }
+  .nav-link:hover,
+  .nav-link[aria-expanded="true"],
+  .nav-link[aria-current="page"],
+  .nav-link[aria-current="true"] {
+    color: var(--color-foreground);
+  }
+  .nav-link:hover::after,
+  .nav-link[aria-expanded="true"]::after,
+  .nav-link[aria-current="page"]::after,
+  .nav-link[aria-current="true"]::after {
+    right: 0;
+  }
+
+  /* Buttons — square, architectural, two variants + sizes */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-display);
+    font-size: var(--text-sm);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    padding: 0.875rem 1.5rem;
+    min-height: 44px;
+    transition:
+      background-color var(--dur-fast) var(--ease-standard),
+      border-color var(--dur-fast) var(--ease-standard),
+      color var(--dur-fast) var(--ease-standard);
+  }
+  .btn-primary {
+    background: var(--color-button-primary);
+    color: var(--color-foreground);
+  }
+  .btn-primary:hover {
+    background: var(--color-brand-primary-hover);
+  }
+  .btn-secondary {
+    background: var(--color-button-secondary);
+    color: var(--color-surface);
+  }
+  .btn-secondary:hover {
+    background: var(--color-foreground-secondary);
+  }
+  .btn-accent {
+    background: var(--color-button-primary);
+    color: var(--color-foreground);
+  }
+  .btn-accent:hover {
+    background: var(--color-brand-primary-hover);
+  }
+  .btn-outline {
+    border: 1px solid var(--color-foreground-secondary);
+    background: transparent;
+    color: var(--color-foreground);
+  }
+  .btn-outline:hover {
+    border-color: var(--color-foreground);
+    background: var(--color-brand-soft);
+  }
+  .btn-outline-light {
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: #fff;
+  }
+  .btn-outline-light:hover {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+  }
+  .btn-onlight {
+    background: var(--color-background);
+    color: var(--color-foreground);
+  }
+  .btn-onlight:hover {
+    background: var(--color-surface);
+  }
+
+  /* Inputs */
+  .field {
+    width: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-brand-light);
+    padding: 0.75rem 1rem;
+    min-height: 44px;
+    font-size: var(--text-sm);
+    color: var(--color-foreground);
+    transition: border-color var(--dur-fast) var(--ease-standard);
+  }
+  .field::placeholder {
+    color: var(--color-foreground-secondary);
+  }
+  .field:hover {
+    border-color: var(--color-foreground-secondary);
+  }
+  .field:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 0;
+    border-color: var(--color-brand-primary);
+  }
+
+  /* Hairline rules */
+  .rule {
+    border-top: 1px solid var(--color-line);
+  }
+
+  /* Screen-reader only */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+/* Skip link — appears on focus */
+.skip-link {
+  position: absolute;
+  top: auto;
+  left: 0;
+  transform: translateY(-100%);
+  z-index: 100;
+  background: var(--color-foreground);
+  color: var(--color-background);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  transition: transform var(--dur-fast) var(--ease-standard);
+}
+.skip-link:focus {
+  top: 0;
+  transform: translateY(0);
+}
+
+/* Reduced motion — honour the OS preference globally */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   Mobile navigation drawer (native <dialog>)
+   ============================================================ */
+@keyframes drawer-in {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+dialog.drawer[open] {
+  animation: drawer-in var(--dur) var(--ease-out);
+}
+dialog.drawer::backdrop {
+  background: color-mix(in srgb, var(--color-foreground) 45%, transparent);
+  animation: overlay-in var(--dur) var(--ease-standard);
+}
+
+.site-footer {
+  --color-ink: var(--color-background);
+  --color-charcoal: var(--color-brand-soft);
+  --color-fog: var(--color-brand-light);
+  --color-line: color-mix(in srgb, var(--color-brand-soft) 22%, transparent);
+  --color-line-strong: var(--color-brand-light);
+  --color-focus-ring: var(--color-brand-light);
+
+  color: var(--color-background);
+}
+
+.site-footer .link-quiet {
+  color: var(--color-background-secondary);
+}
+.site-footer .link-quiet:hover {
+  color: var(--color-brand-light);
+}
+
+.hero-image-scrim {
+  background-image: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--color-foreground) 82%, transparent) 0%,
+    color-mix(in srgb, var(--color-foreground) 35%, transparent) 45%,
+    color-mix(in srgb, var(--color-foreground) 12%, transparent) 100%
+  );
+}
+
+.collection-image-scrim {
+  background-image: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--color-foreground) 88%, transparent) 0%,
+    color-mix(in srgb, var(--color-foreground) 55%, transparent) 55%,
+    color-mix(in srgb, var(--color-foreground) 25%, transparent) 100%
+  );
+}
