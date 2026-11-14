@@ -53,6 +53,12 @@ export function useCatalogFilters(
   setMaterial: (value: string | null) => void
   setSort: (value: SortKey) => void
   clearAll: () => void
+  /**
+   * Clears the *filters* (search, price, usage, material, sort) but keeps
+   * the category and subcategory selection — used by the listing filter
+   * bar's "Clear all", which must not reset the category navigation above it.
+   */
+  clearFilters: () => void
   apply: (products: Product[]) => Product[]
   hasActiveFilters: boolean
 } {
@@ -108,6 +114,16 @@ export function useCatalogFilters(
     if (lockedCategorySlug) {
       next.set('category', lockedCategorySlug)
     }
+    setParams(next)
+  }
+
+  // Same as clearAll, but preserves the current category / subcategory.
+  const clearFilters = () => {
+    const next = new URLSearchParams()
+    const category = lockedCategorySlug ?? params.get('category')
+    if (category) next.set('category', category)
+    const subcategory = params.get('subcategory')
+    if (subcategory) next.set('subcategory', subcategory)
     setParams(next)
   }
 
@@ -258,6 +274,7 @@ export function useCatalogFilters(
     setMaterial,
     setSort,
     clearAll,
+    clearFilters,
     apply,
     hasActiveFilters,
   }

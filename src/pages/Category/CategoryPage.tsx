@@ -5,9 +5,10 @@ import { useCatalogFilters } from '@/hooks/useCatalogFilters'
 import {
   Breadcrumb,
   CatalogGrid,
-  CatalogToolbar,
   SubcategoryChips,
 } from '@/components/catalog/CatalogChrome'
+import { ProductFilters } from '@/components/product/ProductFilters'
+import { deriveCatalogFacets } from '@/lib/catalogFacets'
 import {
   MAIN_CATEGORIES,
   getCategoryBySlug,
@@ -102,12 +103,19 @@ function CategoryListing({
     () => products.filter((p) => p.category === productCategory),
     [products, productCategory]
   )
+  // Facets are derived from this category's products only, so the environment
+  // and material options never offer a value that yields nothing here (and
+  // never leak options from other categories).
+  const facets = useMemo(() => deriveCatalogFacets(allInCategory), [allInCategory])
   // Category is locked to this listing; only search/price/sort are user filters.
   const filters = useCatalogFilters(categoryData.slug)
-  const visible = useMemo(
-    () => filters.apply(listCategoryProducts(categoryData.slug, subcategoryId ?? undefined)),
-    [filters, categoryData.slug, subcategoryId]
+  // Everything the user can filter: the whole category, or the active
+  // subcategory when one is chosen. Facets stay category-wide.
+  const scope = useMemo(
+    () => listCategoryProducts(categoryData.slug, subcategoryId ?? undefined),
+    [categoryData.slug, subcategoryId]
   )
+  const visible = useMemo(() => filters.apply(scope), [filters, scope])
 
   const clearSubcategory = () => {
     const next = new URLSearchParams()
@@ -167,7 +175,7 @@ function CategoryListing({
         />
       </div>
 
-      <CatalogToolbar
+      <ProductFilters
         searchValue={filters.query}
         onSearch={filters.setQuery}
         searchPlaceholder={`Search ${categoryName.toLowerCase()}…`}
@@ -179,17 +187,12 @@ function CategoryListing({
         onMaterial={filters.setMaterial}
         sort={filters.sort}
         onSort={filters.setSort}
-        action={
-          filters.hasActiveFilters ? (
-            <button
-              type="button"
-              onClick={clearToolbarKeepSubcategory}
-              className="btn btn-outline px-4 py-2 text-xs"
-            >
-              Clear filters
-            </button>
-          ) : undefined
-        }
+        environments={facets.environments}
+        materials={facets.materials}
+        visibleCount={visible.length}
+        totalCount={scope.length}
+        onClear={clearToolbarKeepSubcategory}
+        resultNoun={scope.length === 1 ? 'piece' : 'pieces'}
       />
 
       <section aria-label={`${categoryName} products`} className="py-12">
