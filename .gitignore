@@ -16,6 +16,9 @@ dist-ssr
 .env.local
 .env.*.local
 
+# Local review screenshots / audit captures (not part of the app)
+redesign-artifacts/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

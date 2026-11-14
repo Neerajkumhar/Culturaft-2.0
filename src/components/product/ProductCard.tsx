@@ -9,16 +9,23 @@ import { WhatsAppGlyph } from '@/components/navigation/MobileDrawer'
  * Product card — photography-first, square corners, no borders.
  * Shows verified category/subcategory, real price or "Price on Request",
  * short description snippet, and direct WhatsApp enquiry.
+ *
+ * `squareImage` is opt-in: the shop / category / subcategory listings use a
+ * 1:1 photograph so the grid reads evenly, while editorial surfaces (home
+ * featured collection, related products) keep the taller 4:5 crop.
  */
 export default function ProductCard({
   product,
   showEnquiry = true,
   priority = false,
+  squareImage = false,
 }: {
   product: Product
   showEnquiry?: boolean
   /** Set on above-the-fold cards to skip lazy loading. */
   priority?: boolean
+  /** Use a 1:1 photograph crop (catalogue listing grids). */
+  squareImage?: boolean
 }) {
   const category = MAIN_CATEGORIES.find((c) => c.productCategory === product.category)
   const categoryLabel = category?.name ?? product.category
@@ -32,10 +39,14 @@ export default function ProductCard({
     priceUnit: product.priceUnit,
   })
 
+  const imageClass = squareImage ? 'aspect-square' : 'aspect-4/5'
+  const imageWidth = squareImage ? 800 : 640
+  const imageHeight = 800
+
   return (
     <article className="group relative flex flex-col">
-      {/* Photography — 4:5 crop in a reserved box; redundant link is not
-          tabbable (the title link below is the keyboard path) */}
+      {/* Photography — reserved box; redundant link is not tabbable
+          (the title link below is the keyboard path) */}
       <Link
         to={`/product/${product.slug}`}
         className="block overflow-hidden bg-sand"
@@ -46,14 +57,14 @@ export default function ProductCard({
           <img
             src={product.images[0]}
             alt={product.name}
-            width={640}
-            height={800}
+            width={imageWidth}
+            height={imageHeight}
             loading={priority ? 'eager' : 'lazy'}
             decoding="async"
-            className="aspect-4/5 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            className={`${imageClass} w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]`}
           />
         ) : (
-          <div className="aspect-4/5 w-full bg-sand" aria-hidden="true" />
+          <div className={`${imageClass} w-full bg-sand`} aria-hidden="true" />
         )}
       </Link>
 
