@@ -4,6 +4,7 @@ import type { FormEvent } from 'react'
 import { MAIN_CATEGORIES, type MainCategoryId } from '@/data/categoryNavigation'
 import { MegaMenuPanel } from '@/components/navigation/MegaMenuPanel'
 import { MobileDrawer } from '@/components/navigation/MobileDrawer'
+import CartIcon from '@/components/cart/CartIcon'
 
 const CLOSE_DELAY_MS = 120
 
@@ -12,9 +13,9 @@ const CLOSE_DELAY_MS = 120
  *
  * Desktop: wordmark · six category links with a full-width mega menu
  * (opens on hover and keyboard focus, closes on Escape / outside click /
- * focus leaving) · About · Contact · search · Shop All.
+ * focus leaving) · About · Contact · cart · search · Shop All.
  * Mobile: hamburger opens the slide-in drawer (native <dialog>).
- * No cart or account icons — the storefront has no checkout or login.
+ * The cart is a quotation basket; the storefront has no online checkout or login.
  */
 export default function Header() {
   const [openCategory, setOpenCategory] = useState<MainCategoryId | null>(null)
@@ -142,6 +143,7 @@ export default function Header() {
 
           {/* Actions */}
           <div className="ml-auto flex items-center gap-1">
+            <CartIcon />
             <button
               type="button"
               onClick={() => setSearchOpen((open) => !open)}

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
 import Header from './Header'
 import Footer from './Footer'
+import CartToast from '@/components/cart/CartToast'
 
 /**
  * Scrolls the window back to the top whenever the route changes,
@@ -31,6 +32,7 @@ function MainLayout() {
       </a>
       <ScrollToTop />
       <Header />
+      <CartToast />
       <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">
         <Outlet />
       </main>

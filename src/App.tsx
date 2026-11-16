@@ -4,6 +4,7 @@ import HomePage from './pages/Home/HomePage'
 import ShopPage from './pages/Shop/ShopPage'
 import CategoryPage from './pages/Category/CategoryPage'
 import ProductDetailsPage from './pages/ProductDetails/ProductDetailsPage'
+import CartPage from './pages/Cart/CartPage'
 import AboutPage from './pages/About'
 import ContactPage from './pages/Contact'
 import NotFoundPage from './pages/NotFound'
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/shop" element={<ShopPage />} />
           <Route path="/category/:slug" element={<CategoryPage />} />
           <Route path="/product/:slug" element={<ProductDetailsPage />} />
+          <Route path="/cart" element={<CartPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<NotFoundPage />} />
