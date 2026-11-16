@@ -8,6 +8,7 @@ import CartPage from './pages/Cart/CartPage'
 import AboutPage from './pages/About'
 import ContactPage from './pages/Contact'
 import NotFoundPage from './pages/NotFound'
+import Preloader from './components/common/Preloader'
 
 /**
  * Application shell — one page renders at a time.
@@ -16,6 +17,7 @@ import NotFoundPage from './pages/NotFound'
 export default function App() {
   return (
     <BrowserRouter>
+      <Preloader />
       <Routes>
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />

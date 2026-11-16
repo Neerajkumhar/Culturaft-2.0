@@ -1,0 +1,322 @@
+.culturaft-preloader {
+  --paper: #f8f5ee;
+  --edge: #e4d8c5;
+  --bronze: #cb8832;
+
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  width: 100vw;
+  height: 100dvh;
+  min-height: 100svh;
+  overflow: hidden;
+  border-radius: 0;
+  background: radial-gradient(
+    circle at 50% 46%,
+    #fffdf8 0,
+    var(--paper) 58%,
+    var(--edge) 100%
+  );
+  opacity: 1;
+  transition: opacity 240ms ease-out;
+}
+
+.culturaft-preloader.is-leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.culturaft-preloader__paper {
+  position: absolute;
+  inset: 0;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='360'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .4 0 0 0 0 .25 0 0 0 .5 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='700' height='700'%3E%3Cfilter id='m'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .02' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .6 0 0 0 0 .5 0 0 0 0 .3 0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23m)'/%3E%3C/svg%3E");
+  background-size: 360px, 700px;
+  mix-blend-mode: multiply;
+  opacity: 0.13;
+  pointer-events: none;
+}
+
+.culturaft-animation {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.culturaft-animation .logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(18.75rem, 24vw, 22.5rem);
+  aspect-ratio: 336 / 246;
+  transform: translate(-50%, -50%);
+}
+
+.culturaft-animation .zoom {
+  position: absolute;
+  inset: 0;
+  transform-origin: 50% 50%;
+}
+
+.culturaft-animation .lg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.culturaft-animation .halo {
+  position: absolute;
+  top: 47%;
+  left: 50%;
+  width: 80cqw;
+  height: 80cqw;
+  margin: -40cqw 0 0 -40cqw;
+  border-radius: 50%;
+  background: radial-gradient(
+    closest-side,
+    rgb(229 182 111 / 65%),
+    rgb(229 182 111 / 0%)
+  );
+  opacity: 0;
+  mix-blend-mode: screen;
+}
+
+.culturaft-animation .st {
+  fill: none;
+  stroke: var(--bronze);
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+}
+
+.culturaft-animation .hd {
+  fill: none;
+  stroke: #e5b66f;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-dasharray: 0.035 1.2;
+  stroke-dashoffset: 0;
+  opacity: 0;
+  filter: drop-shadow(0 0 2px #cb8832);
+}
+
+.culturaft-animation .dome .fl,
+.culturaft-animation .pot .fl,
+.culturaft-animation .wd {
+  opacity: 0;
+}
+
+.culturaft-animation .shim,
+.culturaft-animation .rvr {
+  transform: translateX(0);
+}
+
+.culturaft-animation.play .sd {
+  animation: culturaft-ink 0.95s cubic-bezier(0.45, 0.1, 0.3, 1)
+    var(--d) forwards;
+}
+
+.culturaft-animation.play .hd {
+  animation: culturaft-head 0.95s cubic-bezier(0.45, 0.1, 0.3, 1) 0.1s
+    forwards;
+}
+
+.culturaft-animation.play .dome .fl {
+  animation: culturaft-fin 0.5s ease-out 0.95s forwards;
+}
+
+.culturaft-animation.play .sp {
+  animation: culturaft-ink2 0.5s ease-out var(--d) forwards;
+}
+
+.culturaft-animation.play .pot .fl {
+  animation: culturaft-fin 0.55s ease-out 1.3s forwards;
+}
+
+.culturaft-animation.play .lg {
+  animation: culturaft-glow 1.3s ease-out 1.3s both;
+}
+
+.culturaft-animation.play .halo {
+  animation: culturaft-flash 1.3s ease-out 1.3s both;
+}
+
+.culturaft-animation.play .wd {
+  opacity: 1;
+}
+
+.culturaft-animation.play .rvr,
+.culturaft-animation.play .shim {
+  animation: culturaft-sweep 1s cubic-bezier(0.45, 0.05, 0.35, 1) 2s forwards;
+}
+
+.culturaft-animation.play .zoom {
+  animation: culturaft-zoom 4s ease-out both;
+}
+
+@keyframes culturaft-ink {
+  0% {
+    opacity: 1;
+    stroke-dashoffset: 1;
+  }
+  100% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes culturaft-ink2 {
+  0% {
+    opacity: 1;
+    stroke-dashoffset: 1;
+  }
+  85% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes culturaft-head {
+  0% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+  98% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -1.2;
+  }
+}
+
+@keyframes culturaft-fin {
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes culturaft-glow {
+  0% {
+    filter: drop-shadow(0 0 0 rgb(255 190 70 / 0%));
+  }
+  35% {
+    filter: drop-shadow(0 0 2.6cqw rgb(229 182 111 / 95%));
+  }
+  100% {
+    filter: drop-shadow(0 0.4cqw 0.8cqw rgb(85 69 53 / 25%));
+  }
+}
+
+@keyframes culturaft-flash {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  30% {
+    opacity: 0.85;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+
+@keyframes culturaft-sweep {
+  to {
+    transform: translateX(406px);
+  }
+}
+
+@keyframes culturaft-zoom {
+  0%,
+  72% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.07);
+  }
+}
+
+.culturaft-animation .dust {
+  position: absolute;
+  width: 1.1cqw;
+  height: 1.1cqw;
+  border-radius: 50%;
+  background: radial-gradient(#fff3d2, #e5b66f);
+  box-shadow: 0 0 1.6cqw #cb8832;
+  opacity: 0;
+}
+
+.culturaft-animation.play .dust {
+  animation: culturaft-rise var(--t) ease-out var(--w) forwards;
+}
+
+@keyframes culturaft-rise {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) scale(0.4);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--dx), var(--dy)) scale(1);
+  }
+}
+
+.culturaft-animation.is-static .dome .fl,
+.culturaft-animation.is-static .pot .fl,
+.culturaft-animation.is-static .wd {
+  opacity: 1;
+}
+
+.culturaft-animation.is-static .rvr {
+  transform: translateX(406px);
+}
+
+.culturaft-animation.is-static .st,
+.culturaft-animation.is-static .hd,
+.culturaft-animation.is-static .dust {
+  opacity: 0;
+}
+
+@media (max-width: 1023px) {
+  .culturaft-animation .logo {
+    width: clamp(17.5rem, 40vw, 20rem);
+  }
+}
+
+@media (max-width: 600px) {
+  .culturaft-animation .logo {
+    width: clamp(14.375rem, 75vw, 18.125rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .culturaft-preloader {
+    transition: none;
+  }
+
+  .culturaft-animation .zoom {
+    animation: none !important;
+  }
+
+  .culturaft-animation.is-static .dome .fl,
+  .culturaft-animation.is-static .pot .fl,
+  .culturaft-animation.is-static .wd {
+    opacity: 1;
+  }
+}

@@ -1,4 +1,8 @@
 import { Link } from 'react-router-dom'
+import { HOME_BANNER, toSrcSet } from '@/config/site'
+
+const bannerWebpSrcSet = toSrcSet(HOME_BANNER.webp)
+const bannerJpegSrcSet = toSrcSet(HOME_BANNER.jpeg)
 
 /**
  * Promo banner — the full-bleed strip that opens the homepage. The artwork
@@ -19,11 +23,11 @@ export function PromoBanner() {
           <source
             type="image/webp"
             sizes="100vw"
-            srcSet="/images/banners/banner-1-1280.webp 1280w, /images/banners/banner-1-2560.webp 2560w"
+            srcSet={bannerWebpSrcSet}
           />
           <img
-            src="/images/banners/banner-1-2560.jpg"
-            srcSet="/images/banners/banner-1-1280.jpg 1280w, /images/banners/banner-1-2560.jpg 2560w"
+            src={HOME_BANNER.jpeg[1].src}
+            srcSet={bannerJpegSrcSet}
             sizes="100vw"
             alt="CULTURAFT — new arrivals and current offers"
             width={2560}
