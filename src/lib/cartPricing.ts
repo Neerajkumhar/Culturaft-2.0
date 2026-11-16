@@ -44,7 +44,11 @@ export function formatINR(amount: number): string {
 
 /** Resolve the display strings and calculability for one cart line. */
 export function resolveLinePricing(product: Product, quantity: number): LinePricing {
-  const { price, priceUnit } = product
+  // Typed as unknown deliberately: products.json currently holds only numbers
+  // or null, but the ambiguous-string guard must stay honest if a string ever
+  // appears (and the type checker must not narrow the guard away).
+  const price: unknown = product.price
+  const { priceUnit } = product
 
   if (typeof price === 'number' && Number.isFinite(price)) {
     const subtotal = price * quantity
