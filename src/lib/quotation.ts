@@ -80,6 +80,17 @@ export function buildCartQuotationUrl(
   summary: CartSummary,
   rawNumber?: string | null
 ): string | null {
+  if (items.length === 0) return null
+  if (items.some((item) => !isAbsoluteProductUrl(item.productUrl))) return null
   const number = rawNumber !== undefined ? rawNumber : getWhatsAppNumber()
   return buildWhatsAppUrl(number, buildCartQuotationMessage(items, summary))
+}
+
+function isAbsoluteProductUrl(value: string): boolean {
+  try {
+    const url = new URL(value)
+    return url.protocol === 'https:' || url.protocol === 'http:'
+  } catch {
+    return false
+  }
 }

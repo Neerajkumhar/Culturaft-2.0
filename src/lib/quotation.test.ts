@@ -132,4 +132,27 @@ describe('buildCartQuotationUrl', () => {
   it('returns null when the number is invalid', () => {
     expect(buildCartQuotationUrl([pricedItem], summaryAllPriced, 'nope')).toBeNull()
   })
+
+  it('does not build a quotation URL for an empty cart', () => {
+    expect(buildCartQuotationUrl([], summaryAllPriced, '919358694180')).toBeNull()
+  })
+
+  it('rejects product links that are not absolute HTTP URLs', () => {
+    const item = { ...pricedItem, productUrl: '/product/bench' }
+    expect(buildCartQuotationUrl([item], summaryAllPriced, '919358694180')).toBeNull()
+  })
+
+  it('preserves special characters, currency, and line breaks through URL encoding', () => {
+    const item = {
+      ...pricedItem,
+      name: 'Rope & Wood Bench — "Aaranya" ❤️',
+      subcategory: 'Handwoven\nBenches',
+    }
+    const url = buildCartQuotationUrl([item], summaryAllPriced, '919358694180')
+    const message = decodeURIComponent(url!.split('?text=')[1])
+    expect(message).toContain(item.name)
+    expect(message).toContain('₹23,000')
+    expect(message).toContain('Subcategory: Handwoven\nBenches')
+    expect(message).toContain(`Product Link: ${item.productUrl}`)
+  })
 })

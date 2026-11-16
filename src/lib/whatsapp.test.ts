@@ -57,6 +57,11 @@ describe('normalizeWhatsAppNumber', () => {
   it('returns null when more than 15 digits remain', () => {
     expect(normalizeWhatsAppNumber('1234567890123456')).toBeNull()
   })
+
+  it('rejects letters and country codes beginning with zero', () => {
+    expect(normalizeWhatsAppNumber('abc919358694180')).toBeNull()
+    expect(normalizeWhatsAppNumber('01234567890')).toBeNull()
+  })
 })
 
 describe('formatEnquiryPrice', () => {
@@ -140,6 +145,10 @@ describe('buildWhatsAppUrl', () => {
   it('returns null when the number is invalid', () => {
     expect(buildWhatsAppUrl('', 'hello')).toBeNull()
     expect(buildWhatsAppNumber_missing())
+  })
+
+  it('returns null when the message is empty', () => {
+    expect(buildWhatsAppUrl('919358694180', ' \n ')).toBeNull()
   })
 })
 

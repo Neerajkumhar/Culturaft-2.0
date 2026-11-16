@@ -28,8 +28,12 @@ export function normalizeWhatsAppNumber(
   raw: string | null | undefined
 ): string | null {
   if (raw === null || raw === undefined) return null
-  const digits = String(raw).replace(/\D/g, '')
+  const value = String(raw).trim()
+  const compact = value.replace(/[\s().-]/g, '')
+  if (!/^\+?\d+$/.test(compact)) return null
+  const digits = compact.replace(/\D/g, '')
   if (digits.length < MIN_DIGITS || digits.length > MAX_DIGITS) return null
+  if (digits.startsWith('0')) return null
   return digits
 }
 
@@ -83,7 +87,7 @@ export function buildWhatsAppUrl(
   message: string
 ): string | null {
   const number = normalizeWhatsAppNumber(rawNumber)
-  if (!number) return null
+  if (!number || !message.trim()) return null
   return 'https://wa.me/' + number + '?text=' + encodeURIComponent(message)
 }
 

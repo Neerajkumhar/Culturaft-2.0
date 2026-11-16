@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '@/hooks/useCart'
 import { useProducts } from '@/hooks/useProducts'
@@ -22,6 +22,8 @@ import CartSummary from '@/components/cart/CartSummary'
 export default function CartPage() {
   const { lines, setQuantity, removeItem, clear } = useCart()
   const products = useProducts()
+  const [quotationError, setQuotationError] = useState<string | null>(null)
+  const missingNumberWarningShown = useRef(false)
 
   useEffect(() => {
     document.title = 'Your Shopping Cart | CULTURAFT'
@@ -36,8 +38,24 @@ export default function CartPage() {
       return product ? { product, quantity: line.quantity } : null
     })
     .filter((line): line is ResolvedCartLine => line !== null)
+  const unresolvedCount = lines.length - resolved.length
+  const numberConfigured = getWhatsAppNumber() !== null
 
-  if (resolved.length === 0) {
+  useEffect(() => {
+    if (
+      lines.length > 0 &&
+      !numberConfigured &&
+      import.meta.env.DEV &&
+      !missingNumberWarningShown.current
+    ) {
+      console.warn(
+        'WhatsApp quotations are disabled: VITE_WHATSAPP_NUMBER is missing or invalid.'
+      )
+      missingNumberWarningShown.current = true
+    }
+  }, [lines.length, numberConfigured])
+
+  if (resolved.length === 0 && lines.length === 0) {
     return (
       <div className="wrap py-20 text-center lg:py-28">
         <p className="eyebrow text-fog">Cart</p>
@@ -51,6 +69,22 @@ export default function CartPage() {
             Explore Furniture
           </Link>
         </div>
+      </div>
+    )
+  }
+
+  if (resolved.length === 0) {
+    return (
+      <div className="wrap py-20 text-center lg:py-28">
+        <p className="eyebrow text-fog">Quotation Request</p>
+        <h1 className="mt-3 text-h1">Cart Items Unavailable</h1>
+        <p className="mx-auto mt-4 max-w-md text-lead text-charcoal" role="alert">
+          One or more saved cart items are no longer available in the catalogue.
+          Clear the cart and add current products before requesting a quotation.
+        </p>
+        <button type="button" onClick={clear} className="btn btn-primary mt-8">
+          Clear Cart
+        </button>
       </div>
     )
   }
@@ -74,9 +108,18 @@ export default function CartPage() {
     }
   })
 
-  const whatsappUrl = buildCartQuotationUrl(items, summary)
-  const numberConfigured = getWhatsAppNumber() !== null
-
+  let whatsappUrl: string | null = null
+  let quotationBuildFailed = false
+  if (unresolvedCount === 0) {
+    try {
+      whatsappUrl = buildCartQuotationUrl(items, summary)
+    } catch (error) {
+      quotationBuildFailed = true
+      if (import.meta.env.DEV) {
+        console.error('CULTURAFT could not build the WhatsApp quotation URL.', error)
+      }
+    }
+  }
   return (
     <div className="wrap pb-20 pt-8 lg:pb-28">
       <header className="max-w-2xl">
@@ -88,6 +131,13 @@ export default function CartPage() {
           Review your selected furniture and request a quotation from CULTURAFT.
         </p>
       </header>
+
+      {unresolvedCount > 0 && (
+        <p className="mt-6 border-l-2 border-brand-primary bg-sand/50 px-4 py-3 text-sm text-charcoal" role="alert">
+          {unresolvedCount} saved cart item{unresolvedCount === 1 ? ' is' : 's are'} no longer
+          available in the catalogue. Clear the cart before requesting a complete quotation.
+        </p>
+      )}
 
       <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-start">
         <section aria-label="Cart items">
@@ -124,14 +174,36 @@ export default function CartPage() {
             </a>
           ) : (
             <>
-              <button type="button" className="btn btn-accent w-full" disabled>
+              <button
+                type="button"
+                className="btn btn-accent w-full"
+                disabled={!numberConfigured || unresolvedCount > 0 || quotationBuildFailed}
+                onClick={() => setQuotationError('The quotation link could not be generated. Please review your cart and try again.')}
+              >
                 <WhatsAppGlyph className="size-4" />
                 Request Quotation on WhatsApp
               </button>
               {!numberConfigured && (
                 <p className="mt-3 text-xs text-charcoal" role="alert">
-                  WhatsApp enquiries are unavailable right now because no business
-                  number is configured. Your cart is safe — please try again later.
+                  WhatsApp enquiries are unavailable because this deployment is
+                  missing a valid <code>VITE_WHATSAPP_NUMBER</code>. Configure it
+                  for Production in Vercel, then redeploy. Your cart is safe.
+                </p>
+              )}
+              {quotationBuildFailed && (
+                <p className="mt-3 text-xs text-charcoal" role="alert">
+                  We couldn&apos;t generate this quotation link. Please review your
+                  cart and try again.
+                </p>
+              )}
+              {unresolvedCount > 0 && (
+                <p className="mt-3 text-xs text-charcoal" role="alert">
+                  The quotation is disabled until every cart item can be resolved.
+                </p>
+              )}
+              {quotationError && (
+                <p className="mt-3 text-xs text-charcoal" role="alert">
+                  {quotationError}
                 </p>
               )}
             </>
