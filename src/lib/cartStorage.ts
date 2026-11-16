@@ -61,33 +61,34 @@ export function loadCart(
 export function saveCart(
   storage: StorageLike | null | undefined,
   lines: CartLine[]
-): void {
-  if (!storage) return
+): boolean {
+  if (!storage) return false
 
   let current: string | null = null
   try {
     current = storage.getItem(CART_STORAGE_KEY)
   } catch {
-    return
+    return false
   }
 
   if (lines.length === 0) {
-    if (current === null) return
+    if (current === null) return true
     try {
       storage.removeItem(CART_STORAGE_KEY)
+      return true
     } catch {
-      /* ignore */
+      return false
     }
-    return
   }
 
   const next = JSON.stringify(
     lines.map((line) => ({ productId: line.productId, quantity: line.quantity }))
   )
-  if (current === next) return
+  if (current === next) return true
   try {
     storage.setItem(CART_STORAGE_KEY, next)
+    return true
   } catch {
-    /* ignore */
+    return false
   }
 }

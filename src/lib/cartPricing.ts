@@ -69,8 +69,11 @@ export function resolveLinePricing(product: Product, quantity: number): LinePric
     }
   }
 
+  const rawPrice = product.priceRaw?.trim()
   return {
-    unitPriceText: 'Price on Request',
+    unitPriceText: rawPrice
+      ? `Price on Request — ${rawPrice}`
+      : 'Price on Request',
     lineSubtotalText: 'To Be Confirmed',
     calculable: false,
     lineSubtotalNumber: null,
@@ -94,11 +97,15 @@ export function summariseCart(lines: ResolvedCartLine[]): CartSummary {
   }
 
   const allCalculable = onRequestCount === 0
+  const knownSubtotalText =
+    onRequestCount > 0 && knownSubtotal === 0
+      ? 'No prices confirmed'
+      : formatINR(knownSubtotal)
   return {
     uniqueCount: lines.length,
     totalQuantity,
     knownSubtotal,
-    knownSubtotalText: formatINR(knownSubtotal),
+    knownSubtotalText,
     onRequestCount,
     allCalculable,
     totalLabel: allCalculable ? 'Estimated Total' : 'Known Subtotal',

@@ -155,10 +155,16 @@ describe('saveCart', () => {
         throw new Error('blocked')
       },
     }
-    expect(() => saveCart(hostile, [{ productId: 'a', quantity: 1 }])).not.toThrow()
+    expect(saveCart(hostile, [{ productId: 'a', quantity: 1 }])).toBe(false)
   })
 
   it('is a no-op for a null storage', () => {
-    expect(() => saveCart(null, [{ productId: 'a', quantity: 1 }])).not.toThrow()
+    expect(saveCart(null, [{ productId: 'a', quantity: 1 }])).toBe(false)
+  })
+
+  it('reports successful persistence, including no-op writes', () => {
+    const storage = makeStorage()
+    expect(saveCart(storage, [{ productId: 'a', quantity: 1 }])).toBe(true)
+    expect(saveCart(storage, [{ productId: 'a', quantity: 1 }])).toBe(true)
   })
 })

@@ -4,6 +4,7 @@ import { formatPrice, isPriceOnRequest } from '@/lib/price'
 import { MAIN_CATEGORIES } from '@/data/categoryNavigation'
 import { useWhatsAppUrl } from '@/hooks/useWhatsAppUrl'
 import { WhatsAppGlyph } from '@/components/navigation/MobileDrawer'
+import AddToCartButton from '@/components/cart/AddToCartButton'
 
 /**
  * Product card — photography-first, square corners, no borders.
@@ -106,25 +107,32 @@ export default function ProductCard({
         </p>
 
         {/* Action Links */}
-        <div className="mt-auto flex items-center justify-between gap-3 pt-3 text-xs border-t border-line/60">
-          <Link
-            to={`/product/${product.slug}`}
-            className="font-display font-semibold text-brand-primary underline-offset-4 hover:text-ink hover:underline"
-          >
-            View Details →
-          </Link>
-          {showEnquiry && whatsappUrl && (
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={`Enquire on WhatsApp about ${product.name}`}
-              className="inline-flex items-center gap-1.5 text-charcoal underline-offset-4 hover:text-ink hover:underline"
+        <div className="mt-auto border-t border-line/60 pt-3">
+          <div className="flex items-center justify-between gap-3 text-xs">
+            <Link
+              to={`/product/${product.slug}`}
+              className="font-display font-semibold text-brand-primary underline-offset-4 hover:text-ink hover:underline"
             >
-              <WhatsAppGlyph className="size-3.5 text-olive" />
-              Enquire
-            </a>
-          )}
+              View Details →
+            </Link>
+            {showEnquiry && whatsappUrl && (
+              <a
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Enquire on WhatsApp about ${product.name}`}
+                className="inline-flex items-center gap-1.5 text-charcoal underline-offset-4 hover:text-ink hover:underline"
+              >
+                <WhatsAppGlyph className="size-3.5 text-olive" />
+                Enquire
+              </a>
+            )}
+          </div>
+          <AddToCartButton
+            product={product}
+            size="sm"
+            className="mt-3 w-full"
+          />
         </div>
       </div>
     </article>

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useProducts } from '@/hooks/useProducts'
 import {
@@ -42,11 +42,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
   )
 
   const [toast, setToast] = useState<CartToastState | null>(null)
+  const persistenceWarningShown = useRef(false)
 
   // Persist on every change; saveCart skips no-op writes and clears the key
   // when the cart empties.
   useEffect(() => {
-    saveCart(storage, lines)
+    const saved = saveCart(storage, lines)
+    if (!saved && !persistenceWarningShown.current) {
+      console.warn(
+        'CULTURAFT could not save the cart in this browser; changes will last only for this tab.'
+      )
+      persistenceWarningShown.current = true
+    } else if (saved) {
+      persistenceWarningShown.current = false
+    }
   }, [storage, lines])
 
   // Auto-dismiss the toast.

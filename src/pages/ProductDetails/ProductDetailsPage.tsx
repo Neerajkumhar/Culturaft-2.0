@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useProducts } from '@/hooks/useProducts'
 import { Breadcrumb } from '@/components/catalog/CatalogChrome'
@@ -6,6 +6,8 @@ import { ImageGallery } from '@/components/product/ImageGallery'
 import { ProductInformation } from '@/components/product/ProductInformation'
 import { RelatedProducts } from '@/components/product/RelatedProducts'
 import WhatsAppButton from '@/components/product/WhatsAppButton'
+import AddToCartButton from '@/components/cart/AddToCartButton'
+import QuantitySelector from '@/components/cart/QuantitySelector'
 import { MAIN_CATEGORIES } from '@/data/categoryNavigation'
 
 /**
@@ -17,6 +19,8 @@ import { MAIN_CATEGORIES } from '@/data/categoryNavigation'
 export default function ProductDetailsPage() {
   const { slug } = useParams()
   const products = useProducts()
+  const [selectedQuantity, setSelectedQuantity] = useState({ slug, value: 1 })
+  const quantity = selectedQuantity.slug === slug ? selectedQuantity.value : 1
 
   const product = products.find((p) => p.slug === slug)
 
@@ -150,17 +154,31 @@ export default function ProductDetailsPage() {
         <div>
           <ProductInformation product={product} />
           <div className="mt-8 border-t border-line pt-8">
-            <WhatsAppButton
-              productName={product.name}
-              productSlug={product.slug}
-              category={product.category}
-              productPrice={product.price}
-              priceUnit={product.priceUnit}
-            />
-            <p className="mt-3 text-xs text-fog">
-              Enquiries are answered directly on WhatsApp — ask about this piece,
-              custom dimensions, wholesale, or international shipping.
-            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <QuantitySelector
+                value={quantity}
+                onChange={(value) => setSelectedQuantity({ slug, value })}
+                label={`Quantity for ${product.name}`}
+              />
+              <AddToCartButton
+                product={product}
+                quantity={quantity}
+                className="flex-1 sm:flex-none"
+              />
+            </div>
+            <div className="mt-6 border-t border-line pt-6">
+              <WhatsAppButton
+                productName={product.name}
+                productSlug={product.slug}
+                category={product.category}
+                productPrice={product.price}
+                priceUnit={product.priceUnit}
+              />
+              <p className="mt-3 text-xs text-fog">
+                Enquiries are answered directly on WhatsApp — ask about this piece,
+                custom dimensions, wholesale, or international shipping.
+              </p>
+            </div>
           </div>
         </div>
       </div>

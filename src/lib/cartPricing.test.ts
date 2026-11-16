@@ -3,8 +3,12 @@ import type { Product } from '@/types/product'
 import { formatINR, resolveLinePricing, summariseCart } from './cartPricing'
 
 /** Build a minimal Product with only the fields pricing reads. */
-function product(price: number | string | null, priceUnit: string | null = null): Product {
-  return { id: 'p', slug: 'p', name: 'Piece', price, priceUnit } as unknown as Product
+function product(
+  price: number | string | null,
+  priceUnit: string | null = null,
+  priceRaw: string | null = null
+): Product {
+  return { id: 'p', slug: 'p', name: 'Piece', price, priceUnit, priceRaw } as unknown as Product
 }
 
 describe('resolveLinePricing', () => {
@@ -36,6 +40,12 @@ describe('resolveLinePricing', () => {
     expect(result.lineSubtotalNumber).toBeNull()
     expect(result.unitPriceText).toBe('Price on Request')
     expect(result.lineSubtotalText).toBe('To Be Confirmed')
+  })
+
+  it('preserves the original request-price text while keeping the on-request label', () => {
+    const result = resolveLinePricing(product(null, null, 'To be confirmed'), 1)
+    expect(result.calculable).toBe(false)
+    expect(result.unitPriceText).toBe('Price on Request — To be confirmed')
   })
 
   it('preserves an ambiguous string price without calculating it', () => {
@@ -80,6 +90,12 @@ describe('summariseCart', () => {
     expect(summary.knownSubtotal).toBe(0)
     expect(summary.onRequestCount).toBe(0)
     expect(summary.allCalculable).toBe(true)
+  })
+
+  it('does not present zero as a known subtotal when every price is on request', () => {
+    const summary = summariseCart([{ product: product(null), quantity: 1 }])
+    expect(summary.totalLabel).toBe('Known Subtotal')
+    expect(summary.knownSubtotalText).toBe('No prices confirmed')
   })
 })
 
